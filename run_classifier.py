@@ -24,7 +24,7 @@ import os
 import modeling
 import optimization
 import tokenization
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 
 flags = tf.flags
 
