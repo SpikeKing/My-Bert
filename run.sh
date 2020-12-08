@@ -3,7 +3,7 @@ bash
 export DATA_DIR=/media/ganjinzero/Code/bert/data/
 export BERT_BASE_DIR=/media/ganjinzero/Code/bert/chinese_L-12_H-768_A-12
 
-python run_classifier.py \
+python3 run_classifier.py \
    --task_name=mytask \
    --do_train=true \
    --do_eval=true \
