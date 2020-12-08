@@ -195,6 +195,7 @@ class DataProcessor(object):
 
   @classmethod
   def _read_tsv(cls, input_file, quotechar=None):
+    print('[Info] _read_tsv - input_file: {}'.format(input_file))
     """Reads a tab separated value file."""
     with tf.gfile.Open(input_file, "r") as f:
       reader = csv.reader(f, delimiter="\t", quotechar=quotechar)
