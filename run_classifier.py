@@ -891,6 +891,7 @@ def main(_):
   train_examples = None
   num_train_steps = None
   num_warmup_steps = None
+  print('[Info] FLAGS.data_dir: {}'.format(FLAGS.data_dir))
   if FLAGS.do_train:
     train_examples = processor.get_train_examples(FLAGS.data_dir)
     num_train_steps = int(
