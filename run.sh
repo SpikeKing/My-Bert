@@ -1,5 +1,3 @@
-bash
-
 export DATA_DIR=./data/toutiao_dataset
 export BERT_BASE_DIR=./data/chinese_L-12_H-768_A-12
 
