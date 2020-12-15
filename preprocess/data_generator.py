@@ -7,14 +7,12 @@ Created by C. L. Wang on 8.12.20
 
 import os
 import sys
-import random
 
 p = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if p not in sys.path:
     sys.path.append(p)
 
 from myutils.project_utils import *
-from myutils.cv_utils import *
 from root_dir import DATA_DIR
 
 
@@ -24,6 +22,7 @@ class DataGenerator(object):
 
     def process(self):
         print('[Info] 开始处理!')
+        random.seed(47)
 
         file_path = os.path.join(DATA_DIR, 'toutiao_cat_data.txt')
 
@@ -38,6 +37,7 @@ class DataGenerator(object):
         create_file(train_file)
         create_file(test_file)
         create_file(dev_file)
+        create_file(labels_file)
 
         data_lines = read_file(file_path)
         out_lines = []
@@ -47,6 +47,10 @@ class DataGenerator(object):
             label = items[2]
             label_set.add(label)
             content = items[3]
+            content = content.replace('\0', '')
+            if not content:
+                print('[Info] error: {} content: {}'.format(idx, content))
+                continue
             # print('[Info] label: {}, content: {}'.format(label, content))
             out_line = "{}\t{}".format(label, content)
             out_lines.append(out_line)
