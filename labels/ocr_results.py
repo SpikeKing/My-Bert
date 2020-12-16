@@ -5,13 +5,11 @@ Copyright (c) 2020. All rights reserved.
 Created by C. L. Wang on 16.12.20
 """
 
-import os
 import cv2
-import sys
 import copy
 
-from myutils.project_utils import *
 from myutils.cv_utils import *
+from myutils.project_utils import *
 from x_utils.vpf_utils import get_ocr_vpf_service
 
 
@@ -85,7 +83,6 @@ class OcrResults(object):
         box_list = []
         word_list = []
 
-        box_dict = dict()
         for words_data in words_info:
             # print('[Info] words_data: {}'.format(words_data))
             word = words_data["word"]
