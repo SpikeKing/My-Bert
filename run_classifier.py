@@ -295,7 +295,7 @@ class MnliProcessor(DataProcessor):
 
 
 class MrpcProcessor(DataProcessor):
-  """Processor for the MRPC data set (GLUE version)."""
+  """Processor for the MRPC-raw data set (GLUE version)."""
 
   def get_train_examples(self, data_dir):
     """See base class."""
