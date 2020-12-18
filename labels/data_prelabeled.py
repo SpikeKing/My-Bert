@@ -102,6 +102,7 @@ class DataPrelabeled(object):
         oh, ow = int(h * 0.05), int(w * 0.05)
         new_box_list, new_word_list = [], []
         for box, word in zip(box_list, word_list):
+            word = unicode_str(word)
             is_inside = self.check_inside_box(p_box, box, oh, ow)
             if is_inside:
                 # draw_4p_rec(img_bgr, box, is_show=True, is_new=False)
