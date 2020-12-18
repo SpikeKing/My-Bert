@@ -196,7 +196,7 @@ class DataPrelabeled(object):
                 "item_list": item_list,
                 "labeled_url": labeled_url
             }
-            out_info = json.dumps(out_dict)
+            out_info = unicode_str(json.dumps(out_dict))
             write_line(out_file, out_info)
             print('[Info] 写入完成: {}'.format(out_info))
 
