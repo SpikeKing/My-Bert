@@ -36,7 +36,8 @@ class DataPrelabeled(object):
             point_list.append([x, y])
         return point_list
 
-    def get_boxes_from_items(self, label_str):
+    @staticmethod
+    def get_boxes_from_items(label_str):
         print('[Info] label_str: {}'.format(label_str))
         label_list = json.loads(label_str)
         coord_list = label_list[0]
@@ -86,7 +87,8 @@ class DataPrelabeled(object):
 
         return box_list, word_list, angle, content
 
-    def check_inside_box(self, p_box, box, oh=0, ow=0):
+    @staticmethod
+    def check_inside_box(p_box, box, oh=0, ow=0):
         x_min, y_min, x_max, y_max = p_box
         is_inside = True
         for pt in box:
@@ -96,14 +98,15 @@ class DataPrelabeled(object):
                 is_inside = False
         return is_inside
 
-    def filter_boxes(self, img_bgr, p_box, box_list, word_list, angle, content):
+    @staticmethod
+    def filter_boxes(img_bgr, p_box, box_list, word_list, angle, content):
         draw_box(img_bgr, p_box, is_show=False, is_new=False)
         h, w = p_box[3] - p_box[1], p_box[2] - p_box[0]
         oh, ow = int(h * 0.05), int(w * 0.05)
         new_box_list, new_word_list = [], []
         for box, word in zip(box_list, word_list):
             word = unicode_str(word)
-            is_inside = self.check_inside_box(p_box, box, oh, ow)
+            is_inside = DataPrelabeled.check_inside_box(p_box, box, oh, ow)
             if is_inside:
                 # draw_4p_rec(img_bgr, box, is_show=True, is_new=False)
                 new_box_list.append(box)
@@ -150,66 +153,72 @@ class DataPrelabeled(object):
             show_img_bgr(ori_img)
         return ori_img
 
+    @staticmethod
+    def process_line(out_file, idx, data_line):
+        print('[Info] ' + '-' * 50)
+        print('[Info] idx: {}'.format(idx))
+        items = data_line.split(';')
+        label_str = items[3]
+        url = items[5]
+        url = url.split("?")[0]
+        img_name = url.split("/")[-1]
+        print('[Info] url: {}'.format(url))
+        label_str = unicode_str(label_str)
+        try:
+            p_box_list = DataPrelabeled.get_boxes_from_items(label_str)
+        except Exception as e:
+            print(u'[Info] label error: {}, label_str: {}'.format(url, label_str))
+            return
+        if not p_box_list:
+            return
+        is_ok, img_bgr = download_url_img(url)
+        # show_img_bgr(img_bgr)
+        # draw_box(img_bgr, p_box, is_show=True)
+        box_list, word_list, angle, content = DataPrelabeled.process_url(url)
+        if angle != 0:
+            print('[Info] angle error: {}, angle: {}'.format(url, angle))
+            return
+        item_list = []
+        for p_box in p_box_list:
+            new_box_list, new_word_list = \
+                DataPrelabeled.filter_boxes(img_bgr, p_box, box_list, word_list, angle, content)
+            img_bgr = DataPrelabeled.draw_box_sequence(img_bgr, new_box_list, is_show=False)
+            item_dict = {
+                "box_list": box_list,
+                "word_list": word_list
+            }
+            item_list.append(item_dict)
+        labeled_url = save_img_2_oss(img_bgr, img_name, "zhengsheng.wcl/problems_segmentation/datasets/prelabeled/")
+        out_dict = {
+            "url": url,
+            "item_list": item_list,
+            "labeled_url": labeled_url
+        }
+        out_info = unicode_str(json.dumps(out_dict))
+        write_line(out_file, out_info)
+        print('[Info] 写入完成: {}'.format(out_info))
+
     def process_file(self, file_path, out_file):
         print('[Info] file_path: {}'.format(file_path))
-        data_lines = read_file(file_path)
-        for idx, data_line in enumerate(data_lines):
-            if idx == 0:
-                continue
-            if idx == 20:
-                break
-            print('[Info] ' + "-" * 50)
-            items = data_line.split(';')
-            label_str = items[3]
-            url = items[5]
-            url = url.split("?")[0]
-            img_name = url.split("/")[-1]
-            print('[Info] url: {}'.format(url))
-            label_str = unicode_str(label_str)
-            try:
-                p_box_list = self.get_boxes_from_items(label_str)
-            except Exception as e:
-                print(u'[Info] label error: {}, label_str: {}'.format(url, label_str))
-                continue
-            if not p_box_list:
-                continue
-            is_ok, img_bgr = download_url_img(url)
-            # show_img_bgr(img_bgr)
-            # draw_box(img_bgr, p_box, is_show=True)
-            box_list, word_list, angle, content = self.process_url(url)
-            if angle != 0:
-                print('[Info] angle error: {}, angle: {}'.format(url, angle))
-                continue
-            item_list = []
-            for p_box in p_box_list:
-                new_box_list, new_word_list = \
-                    self.filter_boxes(img_bgr, p_box, box_list, word_list, angle, content)
-                img_bgr = DataPrelabeled.draw_box_sequence(img_bgr, new_box_list, is_show=False)
-                item_dict = {
-                    "box_list": box_list,
-                    "word_list": word_list
-                }
-                item_list.append(item_dict)
-            labeled_url = save_img_2_oss(img_bgr, img_name, "zhengsheng.wcl/problems_segmentation/datasets/prelabeled/")
-            out_dict = {
-                "url": url,
-                "item_list": item_list,
-                "labeled_url": labeled_url
-            }
-            out_info = unicode_str(json.dumps(out_dict))
-            write_line(out_file, out_info)
-            print('[Info] 写入完成: {}'.format(out_info))
+
+
 
     def process(self):
         data_dir = os.path.join(DATA_DIR, 'labeled_data')
         print('[Info] 数据文件夹: {}'.format(data_dir))
+        out_dir = os.path.join(DATA_DIR, 'labeled_data_out_{}'.format(get_current_time_str()))
+        mkdir_if_not_exist(out_dir)
         paths_list, names_list = traverse_dir_files(data_dir)
-        out_file_format = os.path.join(DATA_DIR, 'labeled_data_imgs_{}.txt')
+        out_file_format = os.path.join(out_dir, 'labeled_data_imgs_{}.txt')
         for path, name in zip(paths_list, names_list):
             name = name.split(".")[0]
             out_file = out_file_format.format(name)
             print('[Info] 输出文件: {}'.format(out_file))
-            self.process_file(path, out_file)
+            data_lines = read_file(path)
+            for idx, data_line in enumerate(data_lines):
+                if idx == 0:
+                    continue
+                DataPrelabeled.process_line(out_file, idx, data_line)
             break
 
 
