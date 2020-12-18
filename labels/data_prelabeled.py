@@ -183,7 +183,7 @@ class DataPrelabeled(object):
             for p_box in p_box_list:
                 new_box_list, new_word_list, is_contain = \
                     self.filter_boxes(img_bgr, p_box, box_list, word_list, angle, content)
-                img_bgr = DataPrelabeled.draw_box_sequence(img_bgr, new_box_list, is_show=True)
+                img_bgr = DataPrelabeled.draw_box_sequence(img_bgr, new_box_list, is_show=False)
                 item_dict = {
                     "box_list": box_list,
                     "word_list": word_list
