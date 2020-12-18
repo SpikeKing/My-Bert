@@ -5,6 +5,9 @@ Copyright (c) 2019. All rights reserved.
 Created by C. L. Wang on 2020/3/13
 """
 
+import cv2
+import numpy as np
+
 def draw_line_len(img_bgr, start_p, v_length, v_arrow, is_new=True, is_show=False, save_name=None):
     """
     绘制直线
@@ -128,6 +131,31 @@ def draw_box(img_bgr, box, color=(0, 0, 255), is_show=True, is_new=True):
     tk = max(min(ih, iw) // 200, 2)
 
     cv2.rectangle(img_bgr, (x_min, y_min), (x_max, y_max), color, tk)
+
+    if is_show:
+        img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+        plt.imshow(img_rgb)
+        plt.show()
+
+    return img_bgr
+
+
+def draw_4p_rec(img_bgr, rec, color=(0, 0, 255), is_show=True, is_new=True):
+    """
+    绘制box
+    """
+    import copy
+    import matplotlib.pyplot as plt
+
+    if is_new:
+        img_bgr = copy.deepcopy(img_bgr)
+
+    ih, iw, _ = img_bgr.shape
+    # color = (0, 0, 255)
+    tk = max(min(ih, iw) // 200, 2)
+
+    rec_arr = np.array(rec)
+    cv2.fillPoly(img_bgr, [rec_arr], color)
 
     if is_show:
         img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
