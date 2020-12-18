@@ -97,7 +97,7 @@ class DataPrelabeled(object):
         return is_inside
 
     def filter_boxes(self, img_bgr, p_box, box_list, word_list, angle, content):
-        draw_box(img_bgr, p_box, is_show=True, is_new=False)
+        draw_box(img_bgr, p_box, is_show=False, is_new=False)
         h, w = p_box[3] - p_box[1], p_box[2] - p_box[0]
         oh, ow = int(h * 0.05), int(w * 0.05)
         new_box_list, new_word_list = [], []
