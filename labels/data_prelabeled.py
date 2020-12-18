@@ -164,7 +164,6 @@ class DataPrelabeled(object):
             url = items[5]
             url = url.split("?")[0]
             img_name = url.split("/")[-1]
-            print('[Info] label: {}'.format(unicode_str(label_str)))
             print('[Info] url: {}'.format(url))
             try:
                 p_box_list = self.get_boxes_from_items(label_str)
