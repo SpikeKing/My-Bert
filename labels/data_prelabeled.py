@@ -105,7 +105,6 @@ class DataPrelabeled(object):
         oh, ow = int(h * 0.05), int(w * 0.05)
         new_box_list, new_word_list = [], []
         for box, word in zip(box_list, word_list):
-            word = unicode_str(word)
             is_inside = DataPrelabeled.check_inside_box(p_box, box, oh, ow)
             if is_inside:
                 # draw_4p_rec(img_bgr, box, is_show=True, is_new=False)
@@ -163,11 +162,10 @@ class DataPrelabeled(object):
         url = url.split("?")[0]
         img_name = url.split("/")[-1]
         print('[Info] url: {}'.format(url))
-        label_str = unicode_str(label_str)
         try:
             p_box_list = DataPrelabeled.get_boxes_from_items(label_str)
         except Exception as e:
-            print(u'[Info] label error: {}, label_str: {}'.format(url, label_str))
+            print('[Info] label error: {}, label_str: {}'.format(url, label_str))
             return
         if not p_box_list:
             return
@@ -194,7 +192,7 @@ class DataPrelabeled(object):
             "item_list": item_list,
             "labeled_url": labeled_url
         }
-        out_info = unicode_str(json.dumps(out_dict))
+        out_info = json.dumps(out_dict)
         write_line(out_file, out_info)
         print('[Info] 写入完成: {}'.format(out_info))
 
