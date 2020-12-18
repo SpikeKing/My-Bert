@@ -169,7 +169,7 @@ class DataPrelabeled(object):
             try:
                 p_box_list = self.get_boxes_from_items(label_str)
             except Exception as e:
-                print('[Info] label error: {}, label_str: {}'.format(url, label_str))
+                print(u'[Info] label error: {}, label_str: {}'.format(url, label_str))
                 continue
             if not p_box_list:
                 continue
