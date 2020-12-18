@@ -130,6 +130,9 @@ class DataPrelabeled(object):
             rec_arr = np.array(box)
             ori_img = cv2.fillPoly(ori_img, [rec_arr], color_list[idx])
 
+        ori_img = cv2.addWeighted(ori_img, 0.5, img_copy, 0.5, 0)
+        ori_img = np.clip(ori_img, 0, 255)
+
         # 绘制方向和序号
         pre_point, next_point = None, None
         pre_color = None
@@ -142,10 +145,6 @@ class DataPrelabeled(object):
             next_point = point
             pre_color = color_list[idx]
             draw_text(ori_img, str(idx), point)  # 绘制序号
-
-
-        ori_img = cv2.addWeighted(ori_img, 0.5, img_copy, 0.5, 0)
-        ori_img = np.clip(ori_img, 0, 255)
 
         if is_show:
             show_img_bgr(ori_img)
