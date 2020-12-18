@@ -107,12 +107,12 @@ class DataPrelabeled(object):
                 # draw_4p_rec(img_bgr, box, is_show=True, is_new=False)
                 new_box_list.append(box)
                 new_word_list.append(word)
-        new_content = " ".join(new_word_list)
+        # new_content = " ".join(new_word_list)
         # new_content = new_content.replace("$$", "")
-        print('[Info] new_content: {}'.format(new_content))
-        print('[Info] content: {}'.format(content))
-        is_contain = True if new_content in content else False
-        return new_box_list, new_word_list, is_contain
+        # print('[Info] new_content: {}'.format(new_content))
+        # print('[Info] content: {}'.format(content))
+        # is_contain = True if new_content in content else False
+        return new_box_list, new_word_list
 
     @staticmethod
     def draw_box_sequence(img_bgr, box_list, is_show=True):
@@ -181,7 +181,7 @@ class DataPrelabeled(object):
                 continue
             item_list = []
             for p_box in p_box_list:
-                new_box_list, new_word_list, is_contain = \
+                new_box_list, new_word_list = \
                     self.filter_boxes(img_bgr, p_box, box_list, word_list, angle, content)
                 img_bgr = DataPrelabeled.draw_box_sequence(img_bgr, new_box_list, is_show=False)
                 item_dict = {
