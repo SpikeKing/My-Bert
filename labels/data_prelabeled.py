@@ -143,6 +143,7 @@ class DataPrelabeled(object):
             pre_color = color_list[idx]
             draw_text(ori_img, str(idx), point)  # 绘制序号
 
+
         ori_img = cv2.addWeighted(ori_img, 0.5, img_copy, 0.5, 0)
         ori_img = np.clip(ori_img, 0, 255)
 

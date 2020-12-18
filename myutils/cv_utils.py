@@ -369,11 +369,12 @@ def generate_colors(n_colors):
     """
     import numpy as np
 
-    np.random.seed(37)
+    np.random.seed(47)
     color_list = []
     for i in range(n_colors):
-        color = (np.random.random((1, 3)) * 0.8 + 0.2).tolist()[0]
+        color = (np.random.random((1, 3)) * 0.8).tolist()[0]
         color = [int(j * 255) for j in color]
+        # color = list(np.clip(color, 0, 255))
         color_list.append(color)
 
     return color_list
