@@ -8,7 +8,7 @@ import os
 import copy
 import cv2
 import sys
-
+from multiprocessing.pool import Pool
 p = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if p not in sys.path:
     sys.path.append(p)
@@ -198,18 +198,15 @@ class DataPrelabeled(object):
         write_line(out_file, out_info)
         print('[Info] 写入完成: {}'.format(out_info))
 
-    def process_file(self, file_path, out_file):
-        print('[Info] file_path: {}'.format(file_path))
-
-
-
     def process(self):
         data_dir = os.path.join(DATA_DIR, 'labeled_data')
         print('[Info] 数据文件夹: {}'.format(data_dir))
         out_dir = os.path.join(DATA_DIR, 'labeled_data_out_{}'.format(get_current_time_str()))
+        print('[Info] 输出文件夹: {}'.format(out_dir))
         mkdir_if_not_exist(out_dir)
         paths_list, names_list = traverse_dir_files(data_dir)
         out_file_format = os.path.join(out_dir, 'labeled_data_imgs_{}.txt')
+        pool = Pool(processes=80)
         for path, name in zip(paths_list, names_list):
             name = name.split(".")[0]
             out_file = out_file_format.format(name)
@@ -218,8 +215,13 @@ class DataPrelabeled(object):
             for idx, data_line in enumerate(data_lines):
                 if idx == 0:
                     continue
-                DataPrelabeled.process_line(out_file, idx, data_line)
-            break
+                # DataPrelabeled.process_line(out_file, idx, data_line)
+                pool.apply_async(DataPrelabeled.process_line, (out_file, idx, data_line))
+            # break
+        pool.close()
+        pool.join()
+
+        print('[Info] 处理完成: {}'.format(out_dir))
 
 
 def main():
