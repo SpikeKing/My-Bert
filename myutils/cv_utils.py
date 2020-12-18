@@ -117,7 +117,6 @@ def draw_box(img_bgr, box, color=(0, 0, 255), is_show=True, is_new=True):
     """
     import cv2
     import copy
-    import matplotlib.pyplot as plt
 
     if is_new:
         img_bgr = copy.deepcopy(img_bgr)
@@ -133,6 +132,7 @@ def draw_box(img_bgr, box, color=(0, 0, 255), is_show=True, is_new=True):
     cv2.rectangle(img_bgr, (x_min, y_min), (x_max, y_max), color, tk)
 
     if is_show:
+        import matplotlib.pyplot as plt
         img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
         plt.imshow(img_rgb)
         plt.show()
