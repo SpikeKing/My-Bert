@@ -76,7 +76,7 @@ class DataPrelabeled(object):
             # print('[Info] pos: {}'.format(pos))
             prob = words_data["prob"]
             if rec_classify != 0:
-                word = "$${}$$".format(word)
+                word = u"$${}$$".format(word)
             if prob == 0:
                 continue
             word_rec = DataPrelabeled.parse_pos(pos)
