@@ -176,21 +176,23 @@ class DataPrelabeled(object):
         if angle != 0:
             print('[Info] angle error: {}, angle: {}'.format(url, angle))
             return
-        item_list = []
+        info_list = []
         for p_box in p_box_list:
             new_box_list, new_word_list = \
                 DataPrelabeled.filter_boxes(img_bgr, p_box, box_list, word_list, angle, content)
             img_bgr = DataPrelabeled.draw_box_sequence(img_bgr, new_box_list, is_show=False)
             item_dict = {
-                "box_list": box_list,
-                "word_list": word_list
+                "p_box": p_box,
+                "box_list": new_box_list,
+                "word_list": new_word_list
             }
-            item_list.append(item_dict)
-        labeled_url = save_img_2_oss(img_bgr, img_name, "zhengsheng.wcl/problems_segmentation/datasets/prelabeled/")
+            info_list.append(item_dict)
+        labeled_url = save_img_2_oss(img_bgr, img_name,
+                                     "zhengsheng.wcl/problems_segmentation/datasets/prelabeled_20201220/")
         out_dict = {
             "url": url,
-            "item_list": item_list,
-            "labeled_url": labeled_url
+            "labeled_url": labeled_url,
+            "info_list": info_list
         }
         out_info = json.dumps(out_dict)
         write_line(out_file, out_info)
@@ -203,6 +205,7 @@ class DataPrelabeled(object):
         print('[Info] 输出文件夹: {}'.format(out_dir))
         mkdir_if_not_exist(out_dir)
         paths_list, names_list = traverse_dir_files(data_dir)
+        print('[Info] 文件数: {}'.format(len(paths_list)))
         out_file_format = os.path.join(out_dir, 'labeled_data_imgs_{}.txt')
         pool = Pool(processes=80)
         for path, name in zip(paths_list, names_list):
@@ -215,7 +218,6 @@ class DataPrelabeled(object):
                     continue
                 # DataPrelabeled.process_line(out_file, idx, data_line)
                 pool.apply_async(DataPrelabeled.process_line, (out_file, idx, data_line))
-            # break
         pool.close()
         pool.join()
 
