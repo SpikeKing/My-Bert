@@ -10,7 +10,7 @@ python run_classifier.py \
   --bert_config_file=$BERT_BASE_DIR/bert_config.json \
   --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
   --max_seq_length=128 \
-  --train_batch_size=32 \
+  --train_batch_size=128 \
   --learning_rate=2e-5 \
-  --num_train_epochs=3.0 \
+  --num_train_epochs=20.0 \
   --output_dir=./data/output_models_toutiao/
