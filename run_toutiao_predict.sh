@@ -3,7 +3,7 @@ export BERT_BASE_DIR=./data/chinese_L-12_H-768_A-12
 export TRAINED_CLASSIFIER=./data/output_models_toutiao/
 
 python run_classifier.py \
-  --task_name=MyTaskProcessor \
+  --task_name=mytask \
   --do_predict=true \
   --data_dir=$DATA_DIR/ \
   --vocab_file=$BERT_BASE_DIR/vocab.txt \

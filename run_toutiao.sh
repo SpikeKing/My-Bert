@@ -2,7 +2,7 @@ export DATA_DIR=./data/toutiao_dataset
 export BERT_BASE_DIR=./data/chinese_L-12_H-768_A-12
 
 python run_classifier.py \
-  --task_name=MyTaskProcessor \
+  --task_name=mytask \
   --do_train=true \
   --do_eval=true \
   --data_dir=$DATA_DIR/ \
